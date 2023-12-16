@@ -1,0 +1,39 @@
+[toolchain]
+
+[features]
+seeds = false
+skip-lint = false
+
+[programs.localnet]
+test_token_faucet = "5cPm72ndqFdHgLqkMxGf61z4231VQW2uyLUx1X6TM71J"
+
+[programs.devnet]
+test_token_faucet = "5cPm72ndqFdHgLqkMxGf61z4231VQW2uyLUx1X6TM71J"
+
+
+[registry]
+url = "https://api.apr.dev"
+
+[provider]
+cluster = "localnet"
+wallet = "/Users/ken/.config/solana/id.json"
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
+
+## Necessary for test validator
+[test.validator]
+url = "https://api.devnet.solana.com"
+[test]
+startup_wait = 20000
+
+## Cloning main programs
+# Token program
+[[test.validator.clone]]
+address = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+# Associated Token program
+[[test.validator.clone]]
+address = "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+# Token Metadata program
+[[test.validator.clone]]
+address = "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
