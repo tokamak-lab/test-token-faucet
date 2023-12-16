@@ -17,8 +17,13 @@ describe("test-token-faucet", () => {
 
   const TOKEN_METADATA_PROGRAM_ID = new PublicKey(PROGRAM_ID);
 
-  const [mintPDA, mintBump] = PublicKey.findProgramAddressSync(
-    [Buffer.from("mint")],
+  const [mintPDA_usdc, mintBump_usdc] = PublicKey.findProgramAddressSync(
+    [Buffer.from("mint"), Buffer.from("usdc")],
+    program.programId
+  );
+
+  const [mintPDA_goldsol, mintBump_goldsol] = PublicKey.findProgramAddressSync(
+    [Buffer.from("mint"), Buffer.from("goldsol")],
     program.programId
   );
 
@@ -28,21 +33,26 @@ describe("test-token-faucet", () => {
     uri: "https://raw.githubusercontent.com/solana-developers/program-examples/new-examples/tokens/tokens/.assets/spl-token.json",
   };
 
-  it("Create a token!", async () => {
+  const usdc_metadata = {
+    "name": "USD Coin",
+    "symbol": "USDC",
+    "uri": "https://raw.githubusercontent.com/solana-developers/program-examples/new-examples/tokens/tokens/.assets/spl-token.json"
+  }
+  it("Create USDC test token!", async () => {
     const [metadataAddress] = PublicKey.findProgramAddressSync(
       [
         Buffer.from("metadata"),
         TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-        mintPDA.toBuffer(),
+        mintPDA_usdc.toBuffer(),
       ],
       TOKEN_METADATA_PROGRAM_ID
     );
 
     const transactionSignature = await program.methods
-    .createToken(metadata.name, metadata.symbol, metadata.uri, mintBump)
+    .createToken("usdc", usdc_metadata.name, usdc_metadata.symbol, usdc_metadata.uri, mintBump_usdc)
     .accounts({
       payer: payer.publicKey,
-      mintAccount: mintPDA,
+      mintAccount: mintPDA_usdc,
       metadataAccount: metadataAddress,
       tokenProgram: TOKEN_PROGRAM_ID,
       tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
@@ -56,27 +66,73 @@ describe("test-token-faucet", () => {
   // console.log(`   Transaction Signature: ${transactionSignature}`);
   });
 
-  it("Mint 1 Token!", async () => {
+  it("Create GOLDSOL token!", async () => {
+    const [metadataAddress] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("metadata"),
+        TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+        mintPDA_goldsol.toBuffer(),
+      ],
+      TOKEN_METADATA_PROGRAM_ID
+    );
+
+    const transactionSignature = await program.methods
+    .createToken("goldsol", metadata.name, metadata.symbol, metadata.uri, mintBump_goldsol)
+    .accounts({
+      payer: payer.publicKey,
+      mintAccount: mintPDA_goldsol,
+      metadataAccount: metadataAddress,
+      tokenProgram: TOKEN_PROGRAM_ID,
+      tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
+      systemProgram: SystemProgram.programId,
+      rent: SYSVAR_RENT_PUBKEY,
+    })
+    .rpc();
+
+  // console.log("Success!");
+  // console.log(`   Mint Address: ${mintPDA}`);
+  // console.log(`   Transaction Signature: ${transactionSignature}`);
+  });
+
+  it("Mint 100 USDC and GOLDSOL!", async () => {
     // Derive the associated token address account for the mint and payer.
-    const associatedTokenAccountAddress = getAssociatedTokenAddressSync(
-      mintPDA,
+    const associatedTokenAccountAddress_goldsol = getAssociatedTokenAddressSync(
+      mintPDA_goldsol,
+      payer.publicKey
+    );
+
+    const associatedTokenAccountAddress_usdc = getAssociatedTokenAddressSync(
+      mintPDA_usdc,
       payer.publicKey
     );
 
     // Amount of tokens to mint.
     const amount = new anchor.BN(100);
 
-    const transactionSignature = await program.methods
-      .mintToken(amount, mintBump)
+    const transactionSignature1 = await program.methods
+      .mintToken("usdc", amount, mintBump_usdc)
       .accounts({
         payer: payer.publicKey,
-        mintAccount: mintPDA,
-        associatedTokenAccount: associatedTokenAccountAddress,
+        mintAccount: mintPDA_usdc,
+        associatedTokenAccount: associatedTokenAccountAddress_usdc,
         tokenProgram: TOKEN_PROGRAM_ID,
         associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
         systemProgram: SystemProgram.programId,
       })
       .rpc();
+
+      const transactionSignature2 = await program.methods
+      .mintToken("goldsol", amount, mintBump_goldsol)
+      .accounts({
+        payer: payer.publicKey,
+        mintAccount: mintPDA_goldsol,
+        associatedTokenAccount: associatedTokenAccountAddress_goldsol,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        systemProgram: SystemProgram.programId,
+      })
+      .rpc();
+
 
     // console.log("Success!");
     // console.log(

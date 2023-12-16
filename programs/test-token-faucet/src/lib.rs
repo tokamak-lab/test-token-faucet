@@ -15,15 +15,16 @@ pub mod test_token_faucet {
 
     pub fn create_token(
         ctx: Context<CreateToken>,
+        ref_symbol: String,
         token_name: String,
         token_symbol: String,
         token_uri: String,
         bump: u8,
     ) -> ProgramResult {
-        create::create_token(ctx, token_name, token_symbol, token_uri, bump)
+        create::create_token(ctx, ref_symbol, token_name, token_symbol, token_uri, bump)
     }
 
-    pub fn mint_token(ctx: Context<MintToken>, amount: u64, bump: u8) -> ProgramResult {
-        mint::mint_token(ctx, amount, bump)
+    pub fn mint_token(ctx: Context<MintToken>,ref_symbol: String, amount: u64, bump: u8) -> ProgramResult {
+        mint::mint_token(ctx, ref_symbol, amount, bump)
     }
 }

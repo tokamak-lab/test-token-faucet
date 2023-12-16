@@ -14,6 +14,7 @@ use {
 };
 
 #[derive(Accounts)]
+#[instruction(ref_symbol: String)]
 pub struct CreateToken<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
@@ -22,7 +23,7 @@ pub struct CreateToken<'info> {
     // Same PDA as address of the account and mint/freeze authority
     #[account(
         init,
-        seeds = [b"mint"],
+        seeds = [b"mint", ref_symbol.as_bytes()],
         bump,
         payer = payer,
         mint::decimals = 9,
@@ -45,15 +46,17 @@ pub struct CreateToken<'info> {
 
 pub fn create_token(
     ctx: Context<CreateToken>,
+    ref_symbol: String,
     token_name: String,
     token_symbol: String,
     token_uri: String,
+    
     bump: u8,
 ) -> ProgramResult {
     msg!("Creating metadata account");
 
     // PDA signer seeds
-    let signer: &[&[&[u8]]] = &[&[b"mint", &[bump][..]]];
+    let signer: &[&[&[u8]]] = &[&[b"mint", ref_symbol.as_bytes(), &[bump][..]]];
 
     // Cross Program Invocation (CPI) signed by PDA
     // Invoking the create_metadata_account_v3 instruction on the token metadata program
