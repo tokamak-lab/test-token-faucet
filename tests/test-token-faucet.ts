@@ -36,7 +36,7 @@ describe("test-token-faucet", () => {
   const usdc_metadata = {
     "name": "USD Coin",
     "symbol": "USDC",
-    "uri": "https://raw.githubusercontent.com/tokamak-lab/test-token-faucet/tests/usdc.json",
+    "uri": "https://raw.githubusercontent.com/tokamak-lab/test-token-faucet/main/tests/usdc.json",
   };
   it("Create USDC test token!", async () => {
     const [metadataAddress] = PublicKey.findProgramAddressSync(
