@@ -24,7 +24,12 @@ pub mod test_token_faucet {
         create::create_token(ctx, ref_symbol, token_name, token_symbol, token_uri, bump)
     }
 
-    pub fn mint_token(ctx: Context<MintToken>,ref_symbol: String, amount: u64, bump: u8) -> ProgramResult {
+    pub fn mint_token(
+        ctx: Context<MintToken>,
+        ref_symbol: String,
+        amount: u64,
+        bump: u8
+    ) -> ProgramResult {
         mint::mint_token(ctx, ref_symbol, amount, bump)
     }
 }

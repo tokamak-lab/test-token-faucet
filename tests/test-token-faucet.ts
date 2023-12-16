@@ -36,8 +36,8 @@ describe("test-token-faucet", () => {
   const usdc_metadata = {
     "name": "USD Coin",
     "symbol": "USDC",
-    "uri": "https://raw.githubusercontent.com/solana-developers/program-examples/new-examples/tokens/tokens/.assets/spl-token.json"
-  }
+    "uri": "https://raw.githubusercontent.com/tokamak-lab/test-token-faucet/tests/usdc.json",
+  };
   it("Create USDC test token!", async () => {
     const [metadataAddress] = PublicKey.findProgramAddressSync(
       [
@@ -61,9 +61,9 @@ describe("test-token-faucet", () => {
     })
     .rpc();
 
-  // console.log("Success!");
-  // console.log(`   Mint Address: ${mintPDA}`);
-  // console.log(`   Transaction Signature: ${transactionSignature}`);
+  console.log("Success!");
+  console.log(`   Mint Address: ${mintPDA_usdc}`);
+  console.log(`   Transaction Signature: ${transactionSignature}`);
   });
 
   it("Create GOLDSOL token!", async () => {
@@ -89,9 +89,9 @@ describe("test-token-faucet", () => {
     })
     .rpc();
 
-  // console.log("Success!");
-  // console.log(`   Mint Address: ${mintPDA}`);
-  // console.log(`   Transaction Signature: ${transactionSignature}`);
+  console.log("Success!");
+  console.log(`   Mint Address: ${mintPDA_goldsol}`);
+  console.log(`   Transaction Signature: ${transactionSignature}`);
   });
 
   it("Mint 100 USDC and GOLDSOL!", async () => {
@@ -134,11 +134,15 @@ describe("test-token-faucet", () => {
       .rpc();
 
 
-    // console.log("Success!");
-    // console.log(
-    //   `   Associated Token Account Address: ${associatedTokenAccountAddress}`
-    // );
-    // console.log(`   Transaction Signature: ${transactionSignature}`);
+    console.log("Success!");
+    console.log(
+      `   Associated Token Account Address for USDC: ${associatedTokenAccountAddress_usdc}`
+    );
+    console.log(`   Transaction Signature: ${transactionSignature1}`);
+    console.log(
+      `   Associated Token Account Address for GOLDSOL: ${associatedTokenAccountAddress_goldsol}`
+    );
+    console.log(`   Transaction Signature: ${transactionSignature2}`);
   });
 
 });
