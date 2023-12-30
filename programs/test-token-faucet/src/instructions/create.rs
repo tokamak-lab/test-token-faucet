@@ -50,7 +50,6 @@ pub fn create_token(
     token_name: String,
     token_symbol: String,
     token_uri: String,
-    
     bump: u8,
 ) -> ProgramResult {
     msg!("Creating metadata account");

@@ -1,7 +1,7 @@
 [toolchain]
 
 [features]
-seeds = false
+seeds = true
 skip-lint = false
 
 [programs.localnet]
@@ -15,7 +15,7 @@ test_token_faucet = "5cPm72ndqFdHgLqkMxGf61z4231VQW2uyLUx1X6TM71J"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "/Users/ken/.config/solana/id.json"
 
 [scripts]
